@@ -67,12 +67,12 @@ background_color = (255, 255, 255)
 #varibles
 score = 0
 level = 1
-gridsize = 10
+gridsize = 4
 
 
 #game objects
-scoreLable = Lable(xpos=10, ypos=505, size=70, color=(0, 0, 0), surface=screen, text="Score: " + str(score))
-levelLable = Lable(xpos=290, ypos=505, size=70, color=(0, 0, 0), surface=screen, text="Level: " + str(level))
+scoreLable = Lable(xpos=10, ypos=505, size=70, color=(0, 0, 0), text="Score: " + str(score))
+levelLable = Lable(xpos=290, ypos=505, size=70, color=(0, 0, 0), text="Level: " + str(level))
 
 grid = []
 for i in range(gridsize):
@@ -103,10 +103,10 @@ while running:
         if event.type == pygame.QUIT:  
             running = False
 
-        if pygame.mouse.get_pressed()[0]:
-            for i in range(0, len(grid)):
-                if grid[i].isClicked(pygame.mouse.get_pos()):
-                    score = grid[i].defussed(score)
+        if event.type == pygame.MOUSEBUTTONUP:
+            for square in grid:
+                if square.isClicked(pygame.mouse.get_pos()):
+                    score = square.defussed(score)
                     scoreLable.newText("Score: " + str(score))
                     
 
@@ -120,15 +120,12 @@ while running:
     screen.fill(background_color)
 
     #draw game obj
-    for i in range(len(grid)):
-        grid[i].draw(screen)
+    for square in grid:
+        square.draw(screen)
 
-    scoreLable.draw()
-    levelLable.draw()
+    scoreLable.draw(screen)
+    levelLable.draw(screen)
     
-    # Update the display
-    pygame.display.flip()
-
     if forAllisBlownUp(grid):
         running = False
 
@@ -141,5 +138,11 @@ while running:
             square.reset()
             minInterval, maxInterval, square.blowUpTimer = newDificulty(level=level)
 
+    # Update the display
+    pygame.display.flip()
+
+
 # Quit Pygame
 pygame.quit()
+
+print("Final Score: " + str(score))
